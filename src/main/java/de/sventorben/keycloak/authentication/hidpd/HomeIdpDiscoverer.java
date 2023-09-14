@@ -109,6 +109,15 @@ final class HomeIdpDiscoverer {
             logFoundIdps("linked", "matching", homeIdps, domain, username);
         }
 
+        // Fallback to IdPs with matching domain (with alias), general case if user uses IdP for the first time
+        if (homeIdps.isEmpty()) {
+            for (IdentityProviderModel idp : enabledIdps) {
+                if (idp.getAlias().toString().equals(domain.toString())) {
+                    homeIdps.add(idp);
+                }
+            }
+        }
+
         return homeIdps;
     }
 
