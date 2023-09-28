@@ -112,7 +112,15 @@ final class HomeIdpDiscoverer {
         // Fallback to IdPs with matching domain (with alias), general case if user uses IdP for the first time
         if (homeIdps.isEmpty()) {
             for (IdentityProviderModel idp : enabledIdps) {
-                if (idp.getAlias().toString().equals(domain.toString())) {
+                // Split the alias and display name based on comma and trim whitespace
+                List<String> aliasDomains = Arrays.stream(idp.getAlias().split(","))
+                        .map(String::trim)
+                        .collect(Collectors.toList());
+                List<String> displayNameDomains = Arrays.stream(idp.getDisplayName().split(","))
+                        .map(String::trim)
+                        .collect(Collectors.toList());
+
+                if (aliasDomains.contains(domain.toString()) || displayNameDomains.contains(domain.toString())) {
                     homeIdps.add(idp);
                 }
             }
